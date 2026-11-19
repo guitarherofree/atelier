@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'" />
+  <title>Atelier Browser</title>
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="browser.css" />
+</head>
+<body>
+  <div class="bar">
+    <div class="nav">
+      <button id="back" title="Back" aria-label="Back">‹</button>
+      <button id="forward" title="Forward" aria-label="Forward">›</button>
+      <button id="reload" title="Reload" aria-label="Reload">↻</button>
+    </div>
+    <form id="go"><input id="url" spellcheck="false" autocomplete="off" placeholder="Search or enter a web address" /></form>
+    <span id="status"></span>
+    <button id="external" class="plain" title="Open this page in your usual browser">Open in browser</button>
+    <button id="capture" class="primary" title="Read this page into Atelier as an opportunity">Capture</button>
+  </div>
+  <div id="purpose"></div>
+  <script src="browser.js"></script>
+</body>
+</html>

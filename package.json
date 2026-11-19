@@ -1,0 +1,36 @@
+{
+  "name": "atelier",
+  "productName": "Atelier",
+  "version": "1.0.0",
+  "description": "A private Mac app for finding, tracking and applying to artist residencies and grants.",
+  "main": "src/main/main.mjs",
+  "type": "module",
+  "private": true,
+  "author": "Freeman Edwards",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "node scripts/build-renderer.mjs",
+    "start": "npm run build && electron .",
+    "dev": "node scripts/build-renderer.mjs --watch & electron .",
+    "dist:mac": "node scripts/package-mac.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:e2e": "node scripts/build-renderer.mjs && node test/e2e/run.mjs"
+  },
+  "dependencies": {
+    "chrono-node": "^2.10.3",
+    "diff": "^9.0.0",
+    "fast-xml-parser": "^5.12.1",
+    "node-html-parser": "^9.0.7",
+    "yauzl": "^3.4.0",
+    "yazl": "^3.3.1"
+  },
+  "devDependencies": {
+    "@electron/packager": "^19.1.1",
+    "@preact/signals": "^2.11.4",
+    "electron": "^45.4.1",
+    "esbuild": "^0.28.2",
+    "leaflet": "^1.9.4",
+    "lucide-preact": "^1.75.0",
+    "preact": "^10.29.8"
+  }
+}

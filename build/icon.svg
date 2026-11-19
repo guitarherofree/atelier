@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7f2e8"/>
+      <stop offset="1" stop-color="#e6dccb"/>
+    </linearGradient>
+    <linearGradient id="clay" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b0623a"/>
+      <stop offset="1" stop-color="#7f3f22"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f3d9b8"/>
+      <stop offset="1" stop-color="#e9c49a"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#3b2a14" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="186" fill="url(#bg)" filter="url(#shadow)"/>
+  <rect x="100.5" y="100.5" width="823" height="823" rx="186" fill="none" stroke="#cbbda5" stroke-width="3"/>
+  <!-- studio window: an arch -->
+  <path d="M312 780 V470 A200 200 0 0 1 712 470 V780 Z" fill="url(#clay)"/>
+  <path d="M362 780 V478 A150 150 0 0 1 662 478 V780 Z" fill="url(#sky)"/>
+  <!-- horizon and hills seen through it -->
+  <path d="M362 690 C430 640 500 640 560 668 C600 686 630 680 662 662 V780 H362 Z" fill="#8a9a63"/>
+  <path d="M362 720 C440 700 520 712 590 732 C620 740 640 738 662 732 V780 H362 Z" fill="#5f7244"/>
+  <!-- a star to travel toward -->
+  <circle cx="584" cy="430" r="22" fill="#fff7e8"/>
+  <!-- window sill -->
+  <rect x="282" y="776" width="460" height="34" rx="10" fill="#2d241a"/>
+</svg>

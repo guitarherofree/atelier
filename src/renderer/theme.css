@@ -1,0 +1,61 @@
+/* Atelier's colors and type. Change these to restyle the whole app. */
+:root {
+  --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+  --font-serif: "New York", ui-serif, "Iowan Old Style", "Palatino", Georgia, serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  --bg: #f4f1ea;          /* linen */
+  --panel: #fbfaf6;
+  --sidebar: #ebe6db;
+  --hover: rgba(60, 45, 20, 0.07);
+  --ink: #23201b;
+  --ink-2: #5f584d;
+  --ink-3: #8c8476;
+  --line: #ddd5c6;
+  --line-2: #e8e2d6;
+
+  --accent: #8e4a2b;      /* fired clay */
+  --accent-ink: #fffaf3;
+  --accent-soft: #f1e2d6;
+
+  --ok: #4f6b35;          /* olive */
+  --ok-soft: #e6ecd9;
+  --info: #3f5d78;        /* slate */
+  --info-soft: #e1e8ef;
+  --warn: #9b6a12;        /* ochre */
+  --warn-soft: #f5ead2;
+  --bad: #a3392b;         /* brick */
+  --bad-soft: #f4dfd9;
+  --online: #4c5f8a;
+  --online-soft: #e3e6f2;
+  --verify: #7a5a9a;
+  --verify-soft: #ece4f3;
+
+  --radius: 9px;
+  --shadow: 0 1px 2px rgba(40, 30, 10, .06), 0 4px 16px rgba(40, 30, 10, .05);
+  --sidebar-w: 216px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c1a17;
+    --panel: #24211d;
+    --sidebar: #191714;
+    --hover: rgba(255, 240, 210, 0.07);
+    --ink: #ece6da;
+    --ink-2: #b4ab9b;
+    --ink-3: #8a8274;
+    --line: #3a352e;
+    --line-2: #2f2b25;
+    --accent: #d08a5f;
+    --accent-ink: #1c1a17;
+    --accent-soft: #3d2c21;
+    --ok: #a6c27f;  --ok-soft: #2b3324;
+    --info: #96b3cf; --info-soft: #232c35;
+    --warn: #e2b660; --warn-soft: #3a3020;
+    --bad: #e58c7c; --bad-soft: #3d2622;
+    --online: #a9b6e0; --online-soft: #262a3a;
+    --verify: #c3a5e0; --verify-soft: #2f2738;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .25);
+  }
+}
