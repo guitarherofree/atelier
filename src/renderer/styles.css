@@ -83,6 +83,7 @@ code, .mono { font-family: var(--font-mono); font-size: 12px; }
 .form-row { display: grid; grid-template-columns: 220px 1fr; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--line-2); align-items: start; }
 .form-row:last-child { border-bottom: 0; }
 .form-label { font-weight: 500; padding-top: 5px; }
+.form-control > .input:not(.input-num), .form-control > .textarea { width: 100%; max-width: 520px; }
 .form-label small { display: block; color: var(--ink-3); font-weight: 400; font-size: 11.5px; margin-top: 2px; }
 .form-grid { display: grid; grid-template-columns: 140px 1fr; gap: 8px 14px; align-items: center; margin-bottom: 8px; }
 .form-grid > label { color: var(--ink-2); font-size: 12.5px; }

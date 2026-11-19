@@ -218,7 +218,7 @@ export function fieldStatus(fv, { staleAfterDays = 14, now = Date.now(), importa
   if (stale) return { state: 'stale', label: 'Not rechecked lately', needsVerify: true, tone: 'warn' };
   const low = (fv.confidence ?? 0.5) < 0.6;
   const needsVerify = important || low || fv.origin === 'ai';
-  const base = fv.origin === 'ai' ? 'Extracted by AI' : low ? 'Uncertain' : fv.origin === 'listing' ? 'From the listing' : 'Extracted';
+  const base = fv.origin === 'ai' ? 'Extracted by AI' : fv.origin === 'listing' ? 'From the listing only' : low ? 'Uncertain' : 'Extracted';
   return {
     state: 'unverified',
     label: needsVerify ? `${base} — verify` : base,

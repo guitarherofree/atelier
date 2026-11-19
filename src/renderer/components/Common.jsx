@@ -212,7 +212,7 @@ export function Provenance({ fv, important, compact }) {
     <span class={`prov tone-${st.tone}${compact ? ' compact' : ''}`} title={tip}>
       <Icon size={12} strokeWidth={2} />
       <span class="prov-label">{st.label}</span>
-      {!compact && (src || checked) && <span class="prov-src">{src}{src && checked ? ' · ' : ''}{checked && `checked ${checked}`}</span>}
+      {!compact && (src || checked) && <span class="prov-src">{src}{src && checked ? ' · ' : ''}{checked && (fv.origin === 'listing' ? `listing read ${checked}` : fv.origin === 'manual' ? `entered ${checked}` : `checked ${checked}`)}</span>}
     </span>
   );
 }

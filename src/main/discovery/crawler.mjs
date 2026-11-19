@@ -78,6 +78,19 @@ function hintsToExtraction(hints, name) {
   return { fields: f, pageText: '' };
 }
 
+/** A readable name from a link, for pages that couldn't be read ("/open-call/sound-field-2027/" → "Sound Field 2027"). */
+export function nameFromUrl(url) {
+  try {
+    const u = new URL(url);
+    const seg = u.pathname.split('/').filter(Boolean).pop() || '';
+    const words = decodeURIComponent(seg).replace(/\.[a-z0-9]{2,5}$/i, '').replace(/[-_+]+/g, ' ').trim();
+    if (words.length >= 4 && /[a-z]/i.test(words) && !/^\d+$/.test(words)) return words.replace(/\b\w/g, (c) => c.toUpperCase());
+    return u.hostname.replace(/^www\./, '');
+  } catch {
+    return String(url || 'Untitled');
+  }
+}
+
 export function extractFromText(text, url, opts = {}) {
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const lines = String(text || '').split(/\n+/).map((l) => l.trim()).filter(Boolean);
@@ -393,7 +406,7 @@ export class Discovery extends EventEmitter {
       this.snapshots.add(opp.id, extraction.pageText, { url });
       return { opportunity: opp, fieldsFound: Object.keys(extraction.fields).length, rendered: page.rendered };
     } catch (err) {
-      const opp = buildOpportunity({ url, extraction: hintsToExtraction({}, hintName || hostOf(url)), origin, status });
+      const opp = buildOpportunity({ url, extraction: hintsToExtraction({}, hintName || nameFromUrl(url)), origin, status });
       opp.check = { ...opp.check, lastCheckedAt: null, status: err.kind || 'unknown', error: err.message };
       const created = this.db.create('opportunities', opp);
       return { opportunity: created, error: { kind: err.kind, message: err.message, help: ERROR_HELP[err.kind] } };
