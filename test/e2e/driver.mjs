@@ -27,8 +27,8 @@ function startMocks(port) {
         if (req.headers.authorization !== `Bearer ${TOKEN}`) { res.writeHead(404, { 'content-type': 'application/json' }); return res.end('{"message":"Not Found"}'); }
         res.writeHead(200, { 'content-type': 'application/json' });
         return res.end(JSON.stringify({
-          tag_name: 'v1.1.0', name: 'Atelier 1.1.0', published_at: '2026-12-01T15:00:00Z', html_url: 'https://github.com/guitarherofree/atelier/releases/tag/v1.1.0',
-          body: '- Faster source checks\n- Map clusters nearby residencies', assets: [{ id: 1, name: 'Atelier-1.1.0-mac-arm64.zip', size: 10, url: `http://127.0.0.1:${port}/asset/1` }, { id: 2, name: 'Atelier-1.1.0-mac-x64.zip', size: 10, url: `http://127.0.0.1:${port}/asset/2` }],
+          tag_name: 'v9.9.0', name: 'Atelier 9.9.0', published_at: '2026-12-01T15:00:00Z', html_url: 'https://github.com/guitarherofree/atelier/releases/tag/v9.9.0',
+          body: '- Faster source checks\n- Map clusters nearby residencies', assets: [{ id: 1, name: 'Atelier-9.9.0-mac-arm64.zip', size: 10, url: `http://127.0.0.1:${port}/asset/1` }, { id: 2, name: 'Atelier-9.9.0-mac-x64.zip', size: 10, url: `http://127.0.0.1:${port}/asset/2` }],
         }));
       }
       if (req.url === '/v1/chat/completions') {
@@ -137,6 +137,32 @@ export async function run({ app, win, db, discovery, updater, browser, backups, 
     check('cards appear in Discover', await waitFor('document.querySelectorAll(".opp-card").length >= 5'));
     await click('.run-status-head');
     await shot('02-discover-results');
+
+    // ---- the time and space filter
+    const pick = (label, value) => js(`(() => { const el = [...document.querySelectorAll('.filters select')].find((s) => [...s.options].some((o) => o.textContent === ${JSON.stringify(label)})); if (!el) return false; el.value = ${JSON.stringify(value)}; el.dispatchEvent(new Event('change', { bubbles: true })); return true; })()`);
+    const cardNames = () => js('[...document.querySelectorAll(".opp-card h3")].map((h) => h.textContent)');
+    const byUrl = (part) => db.list('opportunities').find((o) => (o.url || '').includes(part));
+    const tsOpp = byUrl('between-bridges');
+    const dutyOpp = byUrl('hillside-studios');
+    const nameOf = (o) => (o?.fields?.name?.value || '').toLowerCase();
+    const has = (names, o) => names.some((n) => n.toLowerCase() === nameOf(o));
+    check('residency focus read from the page wording', tsOpp?.fields?.focus?.value === 'Time and space' && dutyOpp?.fields?.focus?.value === 'Public engagement', `${tsOpp?.fields?.focus?.value} / ${dutyOpp?.fields?.focus?.value}`);
+    check('cards show a Time & space badge', await waitFor('[...document.querySelectorAll(".opp-card")].some((c) => c.querySelector(".badge.tone-space")?.textContent.includes("Time & space"))'));
+    await pick('Time & space', 'timespace');
+    await sleep(300);
+    const onlyTs = await cardNames();
+    check('Time & space filter shows only time-and-space residencies', onlyTs.length === 1 && has(onlyTs, tsOpp), onlyTs.join(' | '));
+    await shot('02b-time-and-space-filter');
+    await pick('Time & space', 'timespace-open');
+    await sleep(300);
+    const open = await cardNames();
+    check('“or not stated” adds residencies with no focus yet, not ones with duties', has(open, tsOpp) && !has(open, dutyOpp) && open.length > 1, open.join(' | '));
+    await pick('Time & space', 'duties');
+    await sleep(300);
+    const duties = await cardNames();
+    check('“Project or duties required” shows the others', has(duties, dutyOpp) && !has(duties, tsOpp), duties.join(' | '));
+    await pick('Time & space', '');
+    await sleep(300);
 
     // ---- an opportunity in detail
     const porte = oppByName('Porte Rouge');
@@ -325,7 +351,7 @@ export async function run({ app, win, db, discovery, updater, browser, backups, 
     await shot('27-settings-ai');
     // Updates: token, check, available.
     await updater.setToken(mocks.TOKEN);
-    check('update check finds the new release', updater.status.state === 'available' && updater.status.latest.version === '1.1.0', JSON.stringify(updater.status).slice(0, 160));
+    check('update check finds the new release', updater.status.state === 'available' && updater.status.latest.version === '9.9.0', JSON.stringify(updater.status).slice(0, 160));
     await go('settings', { section: 'updates' });
     await sleep(500);
     await shot('28-settings-updates');

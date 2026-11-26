@@ -2,7 +2,7 @@
 import { useState } from 'preact/hooks';
 import { Compass, Link, Plus, Search, Globe, RefreshCw, ChevronDown, TriangleAlert, Check } from 'lucide-preact';
 import { data, discovery, call, openModal, fits, uiPrefs, setUiPref, go, meta } from '../lib/store.js';
-import { deadlineOf, oppName, OPP_TYPES } from '../../shared/schema.mjs';
+import { deadlineOf, oppName, OPP_TYPES, FOCUS_FILTERS, matchesFocus } from '../../shared/schema.mjs';
 import { ERROR_TEXT } from '../lib/errors.js';
 import { OppCard } from '../components/OppCard.jsx';
 import { Button, Empty, Select, Spinner } from '../components/Common.jsx';
@@ -68,6 +68,7 @@ export function Discover() {
   if (source) list = list.filter((o) => (o.origin?.sourceId || o.origin?.kind) === source);
   if (type) list = list.filter((o) => o.fields?.type?.value === type);
   if (verdict) list = list.filter((o) => fitMap.get(o.id)?.verdict === verdict);
+  if (prefs.discoverFocus) list = list.filter((o) => matchesFocus(o, prefs.discoverFocus));
   if (q.trim()) {
     const needle = q.trim().toLowerCase();
     list = list.filter((o) => JSON.stringify(o.fields).toLowerCase().includes(needle));
@@ -95,6 +96,7 @@ export function Discover() {
         <input class="input search" placeholder="Filter…" value={q} onInput={(e) => setQ(e.currentTarget.value)} />
         <Select value={source} onChange={setSource} options={sourceOptions} />
         <Select value={type} onChange={setType} options={[{ value: '', label: 'Any type' }, ...OPP_TYPES]} />
+        <Select value={prefs.discoverFocus || ''} onChange={(v) => setUiPref('discoverFocus', v)} options={FOCUS_FILTERS} title="Time and space residencies ask for no project, output or public programme" />
         <Select value={verdict} onChange={setVerdict} options={[{ value: '', label: 'Any fit' }, { value: 'strong', label: 'Strong fit' }, { value: 'possible', label: 'Possible fit' }, { value: 'unknown', label: 'Not enough info' }, { value: 'weak', label: 'Weak fit' }, { value: 'unlikely', label: 'Unlikely' }]} />
         <Select value={prefs.discoverSort || 'fit'} onChange={(v) => setUiPref('discoverSort', v)} options={[{ value: 'fit', label: 'Best fit first' }, { value: 'deadline', label: 'Soonest deadline' }, { value: 'added', label: 'Newest' }, { value: 'name', label: 'Name' }]} />
         <label class="check"><input type="checkbox" checked={prefs.hidePast} onChange={(e) => setUiPref('hidePast', e.currentTarget.checked)} /> Hide past deadlines</label>

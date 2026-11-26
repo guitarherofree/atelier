@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0
+- New **Residency focus** detail: Time and space, Project-based, Public engagement or Work exchange, read from each page's wording, with the quote it came from and how sure Atelier is.
+- Filter Discover, Opportunities and Map by focus: **Time & space**, **Time & space or not stated**, or **Project or duties required**. Atelier remembers the filter you chose.
+- Time and space residencies get a badge on their cards. **Time & space?** means the page only hinted at it.
+- Opportunities you saved before this version get a focus from the page text Atelier already has. You can set the focus yourself when adding an opportunity by hand.
+- Web search suggestions include a time and space residency search.
+
 ## 1.0.0
 - Discover residencies, grants and open calls from ArtConnect, Res Artis, Art Infoland, Artist Communities Alliance, Rivet, TransArtists, Artenda and Piney Wood Atlas, plus your own sources, pasted links, entries by hand, web searches and Instagram #artistresidency (browse and capture, or the Graph API).
 - Every detail shows where it came from, when it was last checked, and whether to verify it. Saved opportunities are re-checked and changes are flagged; your own edits are never overwritten.

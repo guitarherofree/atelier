@@ -1,6 +1,6 @@
 // Small building blocks used across the app.
 import { useState, useEffect, useRef } from 'preact/hooks';
-import { TriangleAlert, Check, X, Globe, MapPin, Clock, CircleHelp, Info } from 'lucide-preact';
+import { TriangleAlert, Check, X, Globe, MapPin, Clock, CircleHelp, Info, Hourglass } from 'lucide-preact';
 import { fieldStatus, ORIGIN_LABELS, hostOf, wordCount, charCount, deadlineOf, moneyText } from '../../shared/schema.mjs';
 import { VERDICT_LABELS } from '../../shared/fit.mjs';
 import { ago, fmtDate, countdown } from '../lib/format.js';
@@ -182,6 +182,17 @@ export function FitBadge({ fit }) {
   if (!fit) return null;
   const tone = { strong: 'ok', possible: 'info', weak: 'warn', unlikely: 'bad', unknown: 'muted' }[fit.verdict];
   return <Badge tone={tone} title={fit.score != null ? `Fit score ${fit.score}/100` : ''}>{VERDICT_LABELS[fit.verdict]}</Badge>;
+}
+
+/** "Time & space" on residencies that ask for no project, output or public programme. */
+export function FocusBadge({ opp }) {
+  const fv = opp.fields?.focus;
+  if (fv?.value !== 'Time and space') return null;
+  const sure = fv.origin === 'manual' || fv.verified || (fv.confidence ?? 0) >= 0.6;
+  const title = sure
+    ? 'Time and space residency: no project, output or public programme required'
+    : 'Probably a time and space residency, going by the page’s wording. Open it to check.';
+  return <Badge tone="space" icon={Hourglass} title={title}>{sure ? 'Time & space' : 'Time & space?'}</Badge>;
 }
 
 export function FeeText({ opp }) {

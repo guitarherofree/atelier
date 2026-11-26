@@ -69,6 +69,25 @@ Click a status to see the source page, when it was found and last checked, how c
 
 Saved opportunities are re-checked every 3 days (Settings › General). If a deadline, fee, eligibility, funding or location changes on something you saved, Atelier notifies you. If a site is offline or blocks access, nothing is lost: the last known details stay, marked with when they were last confirmed.
 
+### Time and space residencies
+
+A **time and space** residency gives you studio time without requiring a project, finished output or public programme. An optional talk or open studio still counts. Atelier reads each page's wording and fills in **Residency focus** with one of four values:
+
+| Focus | What it means |
+| --- | --- |
+| **Time and space** | No project, output or public programme required |
+| **Project-based** | You carry out a proposed project, or must produce, exhibit or donate work |
+| **Public engagement** | Teaching, workshops, talks or community programmes are required |
+| **Work exchange** | You work set hours in return for the residency |
+
+Use the **focus filter** in Discover, Opportunities and Map:
+
+- **Time & space** shows only those residencies.
+- **Time & space or not stated** also includes residencies whose pages don't say.
+- **Project or duties required** shows the rest.
+
+Cards show a **Time & space** badge. If the badge reads **Time & space?**, the page only hinted at it, so open the opportunity and confirm or correct the focus. Like every other detail, the focus you set is never overwritten. On Artist Communities Alliance pages, *Additional Expectations: N/A* counts as time and space.
+
 ### Fit
 
 For each opportunity Atelier explains why it may or may not fit, from your profile: deadline, eligibility (places, age, career stage, students, community-specific calls), discipline, your goals and themes, funding, fees, in person or online, region, length, your availability, your needs, and whether you have the materials it asks for. **Artist Profile › What matters most** sets how much each counts. All of this runs on your Mac; the optional **Explain with AI** adds a written explanation.

@@ -41,9 +41,10 @@ function FieldRow({ opp, def, staleAfterDays }) {
   const save = async (v) => { await call('opp:setField', opp.id, def.key, v); setEditing(false); };
   return (
     <div class={`field-row state-${st.state}${st.needsVerify ? ' needs-verify' : ''}`}>
-      <div class="field-label">{def.label}</div>
+      <div class="field-label" title={def.help}>{def.label}</div>
       <div class="field-value">
         {editing ? <FieldEditor def={def} fv={fv} onSave={save} onCancel={() => setEditing(false)} /> : <ValueView def={def} fv={fv} />}
+        {editing && def.help && <div class="field-help">{def.help}</div>}
         {!editing && fv?.siteValue && (
           <div class="field-alert tone-bad">
             <TriangleAlert size={13} /> <span>The site now says: <b>{siteText(def, fv.siteValue)}</b> (seen {ago(fv.siteValue.seenAt)})</span>

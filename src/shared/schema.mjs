@@ -3,6 +3,8 @@
 
 export const OPP_TYPES = ['Residency', 'Grant', 'Fellowship', 'Open call', 'Prize / award', 'Commission', 'Other'];
 export const OPP_MODES = ['In person', 'Online', 'Hybrid'];
+// What a residency asks of you. "Time and space" means no project, output or public programme is required.
+export const RESIDENCY_FOCUS = ['Time and space', 'Project-based', 'Public engagement', 'Work exchange'];
 
 // The details captured for every opportunity, in display order.
 // `important` fields are flagged for verification first.
@@ -12,6 +14,7 @@ export const OPP_FIELDS = [
   { key: 'type', label: 'Type', type: 'enum', options: OPP_TYPES },
   { key: 'location', label: 'Location', type: 'text', important: true },
   { key: 'mode', label: 'Format', type: 'enum', options: OPP_MODES, help: 'In person, online, or both' },
+  { key: 'focus', label: 'Residency focus', type: 'enum', options: RESIDENCY_FOCUS, help: 'Time and space: studio time with no project, output or public programme required (an optional talk or open studio is fine). Project-based: you carry out a proposed project or must produce, exhibit or donate work. Public engagement: teaching, workshops or community programmes are required. Work exchange: you work set hours in return.' },
   { key: 'discipline', label: 'Disciplines', type: 'list' },
   { key: 'eligibility', label: 'Eligibility', type: 'longtext', important: true },
   { key: 'openingDate', label: 'Opens', type: 'date' },
@@ -263,6 +266,31 @@ export function charCount(s) {
 
 export function oppName(opp) {
   return opp?.fields?.name?.value || opp?.title || hostOf(opp?.url) || 'Untitled opportunity';
+}
+
+// ---------------------------------------------------------------- residency focus filter
+
+export const FOCUS_FILTERS = [
+  { value: '', label: 'Any focus' },
+  { value: 'timespace', label: 'Time & space' },
+  { value: 'timespace-open', label: 'Time & space or not stated' },
+  { value: 'duties', label: 'Project or duties required' },
+];
+
+const NOT_RESIDENCIES = new Set(['Grant', 'Prize / award', 'Commission']);
+
+export function isTimeAndSpace(opp) {
+  return opp?.fields?.focus?.value === 'Time and space';
+}
+
+/** Whether an opportunity passes a FOCUS_FILTERS value. */
+export function matchesFocus(opp, filter) {
+  if (!filter) return true;
+  const v = opp?.fields?.focus?.value || '';
+  if (filter === 'timespace') return v === 'Time and space';
+  if (filter === 'timespace-open') return v === 'Time and space' || (!v && !NOT_RESIDENCIES.has(opp?.fields?.type?.value));
+  if (filter === 'duties') return !!v && v !== 'Time and space';
+  return true;
 }
 
 export function isOnline(opp) {

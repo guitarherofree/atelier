@@ -2,7 +2,7 @@
 import { Bookmark, BookmarkCheck, Ban, TriangleAlert, WifiOff, Undo2 } from 'lucide-preact';
 import { oppName, fieldText, verifyCount, APP_STATUS_BY_KEY, hostOf } from '../../shared/schema.mjs';
 import { go, call, fits, appByOpp, data } from '../lib/store.js';
-import { DeadlineBadge, ModeBadge, LocationText, FitBadge, FeeText, Badge, Button } from './Common.jsx';
+import { DeadlineBadge, ModeBadge, FocusBadge, LocationText, FitBadge, FeeText, Badge, Button } from './Common.jsx';
 
 export function checkIssue(opp) {
   const c = opp.check || {};
@@ -37,6 +37,7 @@ export function OppCard({ opp, compact }) {
         <div class="opp-card-badges">
           <DeadlineBadge opp={opp} />
           <ModeBadge opp={opp} />
+          <FocusBadge opp={opp} />
           <FitBadge fit={fit} />
           <FeeText opp={opp} />
           {funding.map((f) => <Badge tone="soft">{f}</Badge>)}

@@ -44,7 +44,7 @@ function AddUrl({ status = 'new' }) {
   );
 }
 
-const MANUAL_KEYS = ['name', 'organization', 'type', 'location', 'mode', 'deadline', 'openingDate', 'applicationFee', 'fundingType', 'fundingAmount', 'eligibility', 'discipline', 'applyUrl', 'website'];
+const MANUAL_KEYS = ['name', 'organization', 'type', 'location', 'mode', 'focus', 'deadline', 'openingDate', 'applicationFee', 'fundingType', 'fundingAmount', 'eligibility', 'discipline', 'applyUrl', 'website'];
 
 function AddManual() {
   const [drafts, setDrafts] = useState(() => Object.fromEntries(MANUAL_KEYS.map((k) => [k, initialDraft(FIELD_BY_KEY[k], null)])));

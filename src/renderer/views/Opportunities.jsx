@@ -2,8 +2,8 @@
 import { useState } from 'preact/hooks';
 import { Bookmark, Plus, Link, RefreshCw } from 'lucide-preact';
 import { data, go, fits, appByOpp, openModal, uiPrefs, setUiPref, call } from '../lib/store.js';
-import { oppName, fieldText, verifyCount, APP_STATUS_BY_KEY, OPP_TYPES, deadlineOf } from '../../shared/schema.mjs';
-import { Button, Empty, Select, DeadlineBadge, ModeBadge, FitBadge, Badge, LocationText } from '../components/Common.jsx';
+import { oppName, fieldText, verifyCount, APP_STATUS_BY_KEY, OPP_TYPES, deadlineOf, FOCUS_FILTERS, matchesFocus } from '../../shared/schema.mjs';
+import { Button, Empty, Select, DeadlineBadge, ModeBadge, FocusBadge, FitBadge, Badge, LocationText } from '../components/Common.jsx';
 import { checkIssue } from '../components/OppCard.jsx';
 import { sortOpps } from './Discover.jsx';
 import { ago } from '../lib/format.js';
@@ -20,6 +20,7 @@ export function Opportunities() {
   let list = data.value.opportunities.filter((o) => (status === 'all' ? o.status !== 'dismissed' : o.status === status));
   if (type) list = list.filter((o) => o.fields?.type?.value === type);
   if (tag) list = list.filter((o) => (o.tags || []).includes(tag));
+  if (prefs.oppFocus) list = list.filter((o) => matchesFocus(o, prefs.oppFocus));
   if (prefs.hidePastSaved) list = list.filter((o) => { const d = deadlineOf(o); return !(d.kind === 'date' && d.days < 0); });
   if (q.trim()) { const n = q.trim().toLowerCase(); list = list.filter((o) => `${JSON.stringify(o.fields)} ${o.notes} ${(o.tags || []).join(' ')}`.toLowerCase().includes(n)); }
   list = sortOpps(list, prefs.oppSort || 'deadline', fitMap);
@@ -42,6 +43,7 @@ export function Opportunities() {
         <input class="input search" placeholder="Filter…" value={q} onInput={(e) => setQ(e.currentTarget.value)} />
         <Select value={status} onChange={setStatus} options={[{ value: 'saved', label: 'Saved' }, { value: 'all', label: 'Saved and new' }, { value: 'dismissed', label: 'Dismissed' }]} />
         <Select value={type} onChange={setType} options={[{ value: '', label: 'Any type' }, ...OPP_TYPES]} />
+        <Select value={prefs.oppFocus || ''} onChange={(v) => setUiPref('oppFocus', v)} options={FOCUS_FILTERS} title="Time and space residencies ask for no project, output or public programme" />
         {tags.length > 0 && <Select value={tag} onChange={setTag} options={[{ value: '', label: 'Any tag' }, ...tags]} />}
         <Select value={prefs.oppSort || 'deadline'} onChange={(v) => setUiPref('oppSort', v)} options={[{ value: 'deadline', label: 'Soonest deadline' }, { value: 'fit', label: 'Best fit first' }, { value: 'added', label: 'Newest' }, { value: 'name', label: 'Name' }]} />
         <label class="check"><input type="checkbox" checked={!!prefs.hidePastSaved} onChange={(e) => setUiPref('hidePastSaved', e.currentTarget.checked)} /> Hide past deadlines</label>
@@ -61,7 +63,7 @@ export function Opportunities() {
                     <div class="cell-sub">{fieldText('organization', o.fields?.organization)}{(o.tags || []).map((t) => <span class="mini-tag">{t}</span>)}</div>
                   </td>
                   <td><DeadlineBadge opp={o} /></td>
-                  <td><LocationText opp={o} /> <ModeBadge opp={o} /></td>
+                  <td><LocationText opp={o} /> <ModeBadge opp={o} /> <FocusBadge opp={o} /></td>
                   <td><FitBadge fit={fitMap.get(o.id)} /></td>
                   <td>{app ? <Badge tone="accent">{APP_STATUS_BY_KEY[app.status]?.label}</Badge> : <span class="muted">—</span>}</td>
                   <td>
@@ -75,7 +77,7 @@ export function Opportunities() {
           </tbody>
         </table>
       ) : (
-        <Empty icon={Bookmark} title={status === 'saved' ? 'No saved opportunities yet' : 'Nothing here'}>
+        <Empty icon={Bookmark} title={prefs.oppFocus || type || tag || q.trim() ? 'Nothing matches these filters' : status === 'saved' ? 'No saved opportunities yet' : 'Nothing here'}>
           <p>Save opportunities from <button type="button" class="link" onClick={() => go('discover')}>Discover</button>, paste a link, or add one by hand.</p>
         </Empty>
       )}

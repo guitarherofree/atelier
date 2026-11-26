@@ -1,7 +1,7 @@
 {
   "name": "atelier",
   "productName": "Atelier",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A private Mac app for finding, tracking and applying to artist residencies and grants.",
   "main": "src/main/main.mjs",
   "type": "module",

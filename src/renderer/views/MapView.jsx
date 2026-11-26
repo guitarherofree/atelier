@@ -2,8 +2,8 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import L from 'leaflet';
 import { Globe, MapPin, Crosshair, LocateFixed } from 'lucide-preact';
-import { data, go, call, meta, appByOpp, toast } from '../lib/store.js';
-import { oppName, fieldText, APP_STATUS_BY_KEY } from '../../shared/schema.mjs';
+import { data, go, call, meta, appByOpp, toast, uiPrefs, setUiPref } from '../lib/store.js';
+import { oppName, fieldText, APP_STATUS_BY_KEY, FOCUS_FILTERS, matchesFocus } from '../../shared/schema.mjs';
 import { Button, DeadlineBadge, Select } from '../components/Common.jsx';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -22,7 +22,9 @@ export function MapView() {
   const [busy, setBusy] = useState(false);
   const apps = appByOpp.value;
   const all = data.value.opportunities.filter((o) => o.status !== 'dismissed');
+  const focus = uiPrefs.value.mapFocus || '';
   const visible = all.filter((o) => {
+    if (!matchesFocus(o, focus)) return false;
     const c = category(o, apps);
     if (show === 'all') return true;
     if (show === 'new') return c === 'new';
@@ -100,6 +102,7 @@ export function MapView() {
       <header class="page-head">
         <div><h1>Map</h1><p class="page-sub">In-person and hybrid residencies by location. Online opportunities are listed on the right.</p></div>
         <div class="page-actions">
+          <Select value={focus} onChange={(v) => setUiPref('mapFocus', v)} options={FOCUS_FILTERS} />
           <Select value={show} onChange={setShow} options={[{ value: 'saved+applying', label: 'Saved and applying' }, { value: 'new', label: 'New in Discover' }, { value: 'all', label: 'Everything' }]} />
         </div>
       </header>

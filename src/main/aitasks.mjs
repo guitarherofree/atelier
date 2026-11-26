@@ -1,6 +1,6 @@
 // What the optional AI does, and exactly what each request contains. Every function here receives only
 // the pieces it needs; nothing else from your data is sent.
-import { OPP_FIELDS, fieldText, oppName, PROPOSAL_SECTIONS, wordCount } from '../shared/schema.mjs';
+import { OPP_FIELDS, FIELD_BY_KEY, fieldText, oppName, PROPOSAL_SECTIONS, wordCount } from '../shared/schema.mjs';
 
 const FIELD_KEYS = OPP_FIELDS.map((f) => f.key);
 
@@ -45,16 +45,24 @@ export async function aiExtract(assistant, { url, pageText, name }) {
     `Return JSON: {"fields": {<field>: {"value": ..., "quote": "exact words from the page"}}} using only these fields when the page states them:\n` +
     `${keys.join(', ')}.\n` +
     'Formats: deadline and openingDate as YYYY-MM-DD (or "rolling"); applicationFee and programFee as {"amount": number, "currency": "USD"} (amount 0 when free); ' +
-    'discipline, fundingType and requirements as arrays of short strings; mode as "In person", "Online" or "Hybrid"; type as one of Residency, Grant, Fellowship, Open call, Prize / award, Commission, Other; everything else as a short string. Omit fields the page does not state.';
+    'discipline, fundingType and requirements as arrays of short strings; mode as "In person", "Online" or "Hybrid"; type as one of Residency, Grant, Fellowship, Open call, Prize / award, Commission, Other; ' +
+    'focus (residencies only) as "Time and space" when the page says no project, output or public programme is required, "Project-based" when residents carry out a proposed project or must produce, exhibit or donate work, "Public engagement" when teaching, workshops or community programmes are required, or "Work exchange" when residents work set hours in return; everything else as a short string. Omit fields the page does not state.';
   const r = await assistant.complete({ system, prompt, json: true, maxTokens: 2500, purpose: 'extract details' });
   const fields = {};
   const raw = r.json?.fields || {};
   const pageLower = String(pageText || '').toLowerCase().replace(/\s+/g, ' ');
   for (const [k, v] of Object.entries(raw)) {
     if (!keys.includes(k) || v == null) continue;
-    const value = v && typeof v === 'object' && 'value' in v ? v.value : v;
+    let value = v && typeof v === 'object' && 'value' in v ? v.value : v;
     const quote = v?.quote ? String(v.quote).slice(0, 400) : '';
     if (value == null || value === '') continue;
+    // Choice fields only take one of their choices.
+    const def = FIELD_BY_KEY[k];
+    if (def?.type === 'enum') {
+      const norm = (x) => String(x).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9/]+/g, ' ').trim();
+      value = def.options.find((o) => norm(o) === norm(value));
+      if (!value) continue;
+    }
     // A quote that isn't actually on the page lowers confidence.
     const found = quote && pageLower.includes(quote.toLowerCase().replace(/\s+/g, ' ').slice(0, 60));
     fields[k] = { value, text: typeof value === 'string' ? value : undefined, method: 'ai', confidence: found ? 0.72 : 0.5, evidence: quote || 'No quote given' };

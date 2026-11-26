@@ -16,8 +16,8 @@ export function startFixtureServer(port = 0) {
     '/open-call/remote-studio-fellowship/': () => read('pages/online.html'),
     '/calls': () => read('site/listing-auto.html'),
     '/opp/sound-field-residency-2027': () => read('pages/rivet.html'),
-    '/opp/between-bridges-residency-2027': () => read('pages/artconnect.html'),
-    '/opp/hillside-studios-spring-2027': () => read('pages/aca.html'),
+    '/opp/between-bridges-residency-2027': () => read('pages/artconnect.html').replace('</main>', '<p>Between Bridges offers time and space for self-directed work, with no expectation to produce or exhibit finished work.</p></main>'),
+    '/opp/hillside-studios-spring-2027': () => read('pages/aca.html').replace('</main>', '<p>Residents are required to lead two community workshops during their stay.</p></main>'),
   };
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, 'http://x');

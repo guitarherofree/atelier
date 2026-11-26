@@ -5,6 +5,7 @@ import { parseDate, parseRange, ROLLING } from './dates.mjs';
 import { parseMoney, allMoney, FREE } from './money.mjs';
 import { findPlaces } from '../../shared/geo.mjs';
 import { DISCIPLINES, hostOf } from '../../shared/schema.mjs';
+import { detectFocus } from './focus.mjs';
 
 // ---------------------------------------------------------------- labels
 
@@ -447,6 +448,10 @@ export function extractOpportunity(html, url, opts = {}) {
   if (typeFromName) set('type', typeFromName, null, 'title', 0.65, name);
   const typeFromText = detectList(pageText.slice(0, 3000), TYPE_WORDS)[0];
   if (typeFromText) set('type', typeFromText, null, 'keywords', 0.45, 'Words used on the page');
+
+  // ---- residency focus (time and space, project-based, …)
+  const focus = detectFocus(pageText, { type: F.type?.value });
+  if (focus) set('focus', focus.value, focus.text, 'wording', focus.confidence, focus.evidence);
 
   // ---- links, contact, language
   const external = links.filter((l) => hostOf(l.url) && hostOf(l.url) !== host);

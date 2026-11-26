@@ -118,6 +118,7 @@ code, .mono { font-family: var(--font-mono); font-size: 12px; }
 .badge.tone-soft { background: transparent; border: 1px solid var(--line); color: var(--ink-2); }
 .badge.tone-accent { background: var(--accent-soft); color: var(--accent); }
 .badge.tone-online { background: var(--online-soft); color: var(--online); }
+.badge.tone-space { background: var(--space-soft); color: var(--space); }
 .badge.tone-verify { background: var(--verify-soft); color: var(--verify); }
 .chips { display: inline-flex; flex-wrap: wrap; gap: 4px; }
 .chip { background: var(--line-2); border-radius: 5px; padding: 1px 7px; font-size: 12.5px; border: 0; }
@@ -211,6 +212,7 @@ code, .mono { font-family: var(--font-mono); font-size: 12px; }
 .field-row.needs-verify { background: color-mix(in srgb, var(--verify-soft) 45%, transparent); }
 .field-row.state-empty .field-label { color: var(--ink-3); }
 .field-label { font-weight: 500; color: var(--ink-2); padding-top: 1px; }
+.field-help { margin-top: 6px; font-size: 12px; line-height: 1.45; color: var(--ink-3); max-width: 62ch; }
 .field-value { min-width: 0; overflow-wrap: anywhere; }
 .field-meta { padding-top: 1px; }
 .field-meta .prov { flex-wrap: wrap; row-gap: 1px; }

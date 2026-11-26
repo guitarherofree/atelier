@@ -20,6 +20,7 @@ export function suggestedQueries(profile, year = new Date().getFullYear() + 1) {
     out.push(`funded ${d.toLowerCase()} residency ${year} no application fee`);
     out.push(`grant for ${d.toLowerCase()} artists ${year} deadline`);
   }
+  out.splice(3, 0, `time and space artist residency ${year} self-directed no required output`);
   for (const t of themes) out.push(`artist residency ${t.toLowerCase()} ${year}`);
   if (profile?.basedIn) out.push(`artist grant ${profile.basedIn.split(',').slice(-2).join(' ').trim()} ${year}`);
   return [...new Set(out)].slice(0, 8);

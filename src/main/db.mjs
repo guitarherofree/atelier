@@ -8,6 +8,7 @@ import { DEFAULT_SETTINGS } from '../config.mjs';
 import { DEFAULT_PROFILE } from '../shared/fit.mjs';
 import { uid } from '../shared/schema.mjs';
 import { defaultSources } from './discovery/sources.mjs';
+import { detectFocus } from './extract/focus.mjs';
 
 export const COLLECTIONS = ['opportunities', 'applications', 'sources', 'contacts', 'portfolio', 'projects', 'proposals', 'snippets'];
 const PREFIX = {
@@ -51,6 +52,21 @@ export class Database extends EventEmitter {
       for (const s of defaultSources()) if (!existing.has(s.builtInKey)) this.files.sources.data.items.push({ id: uid(PREFIX.sources), createdAt: new Date().toISOString(), ...s });
       this.files.sources.data.seeded = true;
       this.files.sources.save();
+    }
+    // 1.1: work out the residency focus for opportunities saved before Atelier tracked it, from the page
+    // text it already has. Re-checks keep it up to date after that.
+    const opps = this.files.opportunities.data;
+    if (!opps.focusBackfilled) {
+      for (const o of opps.items) {
+        o.fields = o.fields || {};
+        if (o.fields.focus) continue;
+        const r = detectFocus([o.pageExcerpt, o.fields.description?.value].filter(Boolean).join('\n'), { type: o.fields.type?.value });
+        if (!r) continue;
+        const at = o.check?.lastCheckedAt || o.createdAt || new Date().toISOString();
+        o.fields.focus = { value: r.value, text: r.text, origin: 'extracted', method: 'wording', confidence: r.confidence, evidence: r.evidence, sourceUrl: o.url || undefined, extractedAt: at, checkedAt: at };
+      }
+      opps.focusBackfilled = true;
+      this.files.opportunities.save();
     }
   }
 
